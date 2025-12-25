@@ -38,7 +38,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('branches.edit', $branch) }}" class="btn btn-sm btn-info">Edit</a>
-                                        <form action="{{ route('branches.destroy', $branch) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
+                                        <form action="{{ route('branches.destroy', $branch) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>

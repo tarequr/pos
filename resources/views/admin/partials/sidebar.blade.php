@@ -13,7 +13,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class='sidebar-link' href='pages-profile.html'>
+                <a class='sidebar-link' href="{{ route('users.index') }}">
                     <i class="align-middle" data-feather="user"></i> <span class="align-middle">Users</span>
                 </a>
             </li>
