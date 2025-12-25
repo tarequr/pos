@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -30,7 +31,9 @@ class CategoryController extends Controller
      */
     public function store(\App\Http\Requests\StoreCategoryRequest $request)
     {
-        \App\Models\Category::create($request->validated());
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        \App\Models\Category::create($data);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category created successfully.');
@@ -57,7 +60,9 @@ class CategoryController extends Controller
      */
     public function update(\App\Http\Requests\UpdateCategoryRequest $request, \App\Models\Category $category)
     {
-        $category->update($request->validated());
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        $category->update($data);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category updated successfully.');

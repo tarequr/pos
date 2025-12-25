@@ -23,7 +23,6 @@ class UpdateBranchRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:branches,slug,' . $this->branch->id,
             'status' => 'required|boolean',
         ];
     }

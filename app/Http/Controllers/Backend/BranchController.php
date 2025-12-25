@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BranchController extends Controller
 {
@@ -30,7 +31,9 @@ class BranchController extends Controller
      */
     public function store(\App\Http\Requests\StoreBranchRequest $request)
     {
-        \App\Models\Branch::create($request->validated());
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        \App\Models\Branch::create($data);
 
         return redirect()->route('branches.index')
             ->with('success', 'Branch created successfully.');
@@ -57,7 +60,9 @@ class BranchController extends Controller
      */
     public function update(\App\Http\Requests\UpdateBranchRequest $request, \App\Models\Branch $branch)
     {
-        $branch->update($request->validated());
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        $branch->update($data);
 
         return redirect()->route('branches.index')
             ->with('success', 'Branch updated successfully.');

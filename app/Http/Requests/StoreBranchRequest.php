@@ -23,7 +23,6 @@ class StoreBranchRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:branches,slug',
             'status' => 'required|boolean',
         ];
     }
