@@ -2,7 +2,7 @@
     <div class="sidebar-content js-simplebar">
         <a class='sidebar-brand' href='{{ route('dashboard') }}'>
             <span class="sidebar-brand-text align-middle">
-                WAFFEN Laboratory
+                {{ config('app.name') }}
             </span>
         </a>
 
@@ -16,7 +16,7 @@
                 </a>
                 <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
                     <li class="sidebar-item active"><a class='sidebar-link'
-                            href='{{ route('dashboard') }}'>Analytics</a>
+                            href="{{ route('dashboard') }}">Analytics</a>
                     </li>
                     <li class="sidebar-item"><a class='sidebar-link' href='dashboard-ecommerce.html'>E-Commerce
                             <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
@@ -156,11 +156,28 @@
             </li>
 
             <li class="sidebar-header">
-                Plugins & Addons
+                Lookups
+            </li>
+            <li class="sidebar-item active">
+                <a data-bs-target="#lookups" data-bs-toggle="collapse" class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Lookups</span>
+                </a>
+                <ul id="lookups" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                    <li class="sidebar-item active"><a class='sidebar-link'
+                            href="{{ route('categories.index') }}">Categories</a>
+                    </li>
+                    <li class="sidebar-item"><a class='sidebar-link'
+                            href="{{ route('branches.index') }}">Branches</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-header">
+                Settings
             </li>
 
             <li class="sidebar-item active">
-                <a class='sidebar-link' href='{{ route('setting') }}'>
+                <a class='sidebar-link' href="{{ route('setting') }}">
                     <i class="align-middle" data-feather="settings"></i>
                     <span class="align-middle">Settings</span>
                 </a>
