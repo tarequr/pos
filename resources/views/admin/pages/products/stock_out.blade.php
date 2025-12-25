@@ -3,20 +3,17 @@
 @section('content')
 <div class="container-fluid p-0">
     <div class="mb-3">
-        <h1 class="h3 d-inline align-middle">Products</h1>
-        <a href="{{ route('products.create') }}" class="btn btn-primary float-end">Add Product</a>
+        <h1 class="h3 d-inline align-middle">Stock Out Products</h1>
+        <a href="{{ route('products.index') }}" class="btn btn-secondary float-end">Back to Product List</a>
     </div>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Product List</h5>
+                    <h5 class="card-title mb-0">Stock Out Product List</h5>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -25,7 +22,7 @@
                                 <th>Branch</th>
                                 <th>Serial</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th>Date Sold</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,24 +33,13 @@
                                     <td>{{ $product->branch->name ?? 'N/A' }}</td>
                                     <td>{{ $product->serial_no }}</td>
                                     <td>
-                                        <span class="badge {{ $product->status === 'stock_in' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $product->status === 'stock_in' ? 'Stock In' : ucfirst($product->status) }}
-                                        </span>
+                                        <span class="badge bg-danger">Stock Out</span>
                                     </td>
-                                    <td>
-                                        @if($product->status === 'stock_in')
-                                            <form action="{{ route('products.stock-out', $product) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to mark this item as sold?');">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-warning">Stock Out</button>
-                                            </form>
-                                        @else
-                                            <span class="text-muted">Stock Out</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ $product->updated_at->format('Y-m-d H:i') }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">No products found.</td>
+                                    <td colspan="6" class="text-center">No stock out products found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

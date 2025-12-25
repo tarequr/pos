@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 Route::redirect('/', '/login');
 
 Route::resource('products', ProductController::class);
+Route::get('stock-out-products', [ProductController::class, 'stockOutList'])->name('products.stock_out_list');
 Route::post('products/{product}/stock-out', [ProductController::class, 'stockOut'])->name('products.stock-out');
 
 Route::middleware(['auth'])->group(function () {

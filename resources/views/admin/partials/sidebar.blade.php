@@ -1,16 +1,49 @@
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class='sidebar-brand' href='{{ route('dashboard') }}'>
+        <a class='sidebar-brand' href="{{ route('dashboard') }}">
             <span class="sidebar-brand-text align-middle">
-                {{ config('app.name') }}
+                <!-- {{ config('app.name') }} -->
+                  POS
             </span>
         </a>
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">
-                Pages
+                Main Menu
             </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' href='pages-profile.html'>
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Users</span>
+                </a>
+            </li>
+
             <li class="sidebar-item active">
+                <a data-bs-target="#products" data-bs-toggle="collapse" class="sidebar-link">
+                    <i class="align-middle" data-feather="package"></i> <span class="align-middle">Products</span>
+                </a>
+                <ul id="products" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                    <li class="sidebar-item active"><a class='sidebar-link'
+                            href="{{ route('products.index') }}">Product List</a>
+                    </li>
+                    <li class="sidebar-item"><a class='sidebar-link'
+                            href="{{ route('products.stock_out_list') }}">Stock Out List</a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- <li class="sidebar-item active">
                 <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link">
                     <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
                 </a>
@@ -153,14 +186,14 @@
                 <a class='sidebar-link' href='tables-bootstrap.html'>
                     <i class="align-middle" data-feather="list"></i> <span class="align-middle">Tables</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="sidebar-header">
                 Lookups
             </li>
             <li class="sidebar-item active">
                 <a data-bs-target="#lookups" data-bs-toggle="collapse" class="sidebar-link">
-                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Lookups</span>
+                    <i class="align-middle" data-feather="check-circle"></i> <span class="align-middle">Lookups</span>
                 </a>
                 <ul id="lookups" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
                     <li class="sidebar-item active"><a class='sidebar-link'

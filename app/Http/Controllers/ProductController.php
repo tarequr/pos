@@ -15,8 +15,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category', 'branch'])->latest()->paginate(10);
+        $products = Product::inStock()->with(['category', 'branch'])->latest()->paginate(10);
         return view('admin.pages.products.index', compact('products'));
+    }
+
+    public function stockOutList()
+    {
+        $products = Product::stockOut()->with(['category', 'branch'])->latest()->paginate(10);
+        return view('admin.pages.products.stock_out', compact('products'));
     }
 
     /**
@@ -41,7 +47,7 @@ class ProductController extends Controller
                 'category_id' => $request->category_id,
                 'branch_id' => $request->branch_id,
                 'name' => $request->name,
-                'status' => 'active',
+                'status' => 'stock_in',
             ];
 
             if ($request->serial_type === 'single') {
@@ -80,7 +86,7 @@ class ProductController extends Controller
 
     public function stockOut(Product $product)
     {
-        $product->update(['status' => 'sold']);
-        return redirect()->back()->with('success', 'Product marked as sold.');
+        $product->update(['status' => 'stock_out']);
+        return redirect()->back()->with('success', 'Product marked as Stock Out.');
     }
 }

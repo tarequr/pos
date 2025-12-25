@@ -31,11 +31,11 @@ class Product extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', 'stock_in');
     }
 
-    public function scopeSold($query)
+    public function scopeStockOut($query)
     {
-        return $query->where('status', 'sold');
+        return $query->where('status', 'stock_out');
     }
 }

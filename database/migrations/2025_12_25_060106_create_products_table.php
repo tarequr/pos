@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('serial_no')->unique(); // Serial must be unique
-            $table->string('status')->default('active'); // 'active', 'sold', 'returned'
+            $table->string('status')->default('stock_in')->comment('stock_in, stock_out, returned'); // 'stock_in', 'stock_out', 'returned'
             $table->timestamps();
         });
     }
