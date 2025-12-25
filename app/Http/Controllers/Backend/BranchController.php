@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class BranchController extends Controller
 {
@@ -33,10 +34,17 @@ class BranchController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($request->name);
+        try {
         \App\Models\Branch::create($data);
 
-        return redirect()->route('branches.index')
-            ->with('success', 'Branch created successfully.');
+        notify()->success('Branch created successfully.', 'Success');
+        return redirect()->route('branches.index');
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Branch Create Failed', 'Error');
+            return back();
+        }
     }
 
     /**
@@ -62,10 +70,17 @@ class BranchController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($request->name);
+        try {
         $branch->update($data);
 
-        return redirect()->route('branches.index')
-            ->with('success', 'Branch updated successfully.');
+        notify()->success('Branch updated successfully.', 'Success');
+        return redirect()->route('branches.index');
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Branch Update Failed', 'Error');
+            return back();
+        }
     }
 
     /**
@@ -73,9 +88,16 @@ class BranchController extends Controller
      */
     public function destroy(\App\Models\Branch $branch)
     {
+        try {
         $branch->delete();
 
-        return redirect()->route('branches.index')
-            ->with('success', 'Branch deleted successfully.');
+        notify()->success('Branch deleted successfully.', 'Success');
+        return redirect()->route('branches.index');
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Branch Delete Failed', 'Error');
+            return back();
+        }
     }
 }

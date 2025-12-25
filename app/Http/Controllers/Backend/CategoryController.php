@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -33,10 +34,16 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($request->name);
-        \App\Models\Category::create($data);
+        try {
+            \App\Models\Category::create($data);
 
-        return redirect()->route('categories.index')
-            ->with('success', 'Category created successfully.');
+            notify()->success('Category created successfully.', 'Success');
+            return redirect()->route('categories.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Category Create Failed', 'Error');
+            return back();
+        }
     }
 
     /**
@@ -62,10 +69,16 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($request->name);
-        $category->update($data);
+        try {
+            $category->update($data);
 
-        return redirect()->route('categories.index')
-            ->with('success', 'Category updated successfully.');
+            notify()->success('Category updated successfully.', 'Success');
+            return redirect()->route('categories.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Category Update Failed', 'Error');
+            return back();
+        }
     }
 
     /**
@@ -73,9 +86,15 @@ class CategoryController extends Controller
      */
     public function destroy(\App\Models\Category $category)
     {
-        $category->delete();
+        try {
+            $category->delete();
 
-        return redirect()->route('categories.index')
-            ->with('success', 'Category deleted successfully.');
+            notify()->success('Category deleted successfully.', 'Success');
+            return redirect()->route('categories.index');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Category Delete Failed', 'Error');
+            return back();
+        }
     }
 }

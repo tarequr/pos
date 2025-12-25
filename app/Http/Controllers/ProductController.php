@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -71,22 +72,34 @@ class ProductController extends Controller
             }
 
             DB::commit();
+            notify()->success('Products entry created successfully.', 'Success');
 
-            return redirect()->route('products.index')->with('success', 'Products entry created successfully.');
+            return redirect()->route('products.index');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getMessage());
             // Check for duplicate entry error specifically?
             if (str_contains($e->getMessage(), 'Integrity constraint violation')) { // Duplicate entry
-                 return back()->withInput()->withErrors(['serial_no' => 'One or more serial numbers in the range already exist.']);
+                 notify()->error('One or more serial numbers in the range already exist.', 'Error');
+                 return back()->withInput();
             }
-            return back()->withInput()->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()]);
+            notify()->error('Something went wrong: ' . $e->getMessage(), 'Error');
+            return back()->withInput();
         }
     }
 
     public function stockOut(Product $product)
     {
-        $product->update(['status' => 'stock_out']);
-        return redirect()->back()->with('success', 'Product marked as Stock Out.');
+        try {
+            $product->update(['status' => 'stock_out']);
+            notify()->success('Product marked as Stock Out.', 'Success');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Product Stock Out Failed', 'Error');
+            return back();
+        }
     }
 }

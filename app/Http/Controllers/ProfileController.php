@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -24,6 +25,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        try {
         $user = $request->user();
         $data = $request->only(['name', 'email', 'phone', 'address', 'designation']);
 
@@ -39,7 +41,14 @@ class ProfileController extends Controller
         }
         $user->save();
 
-        return Redirect::route('profile.edit')->with('success', 'Profile updated successfully.');
+        notify()->success('Profile updated successfully.', 'Success');
+        return Redirect::route('profile.edit');
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Profile Update Failed', 'Error');
+            return back();
+        }
     }
 
     /**

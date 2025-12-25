@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SettingController extends Controller
 {
@@ -25,7 +26,7 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
-        // dd($request->all());
+        try {
         $setting = Setting::first();
         if (! $setting) {
             $setting = new Setting();
@@ -66,7 +67,14 @@ class SettingController extends Controller
         // Reload config
         // Artisan::call('config:cache');
 
-        return redirect()->route('setting')->with('success', 'Settings updated successfully and .env updated.');
+        notify()->success('Settings updated successfully and .env updated.', 'Success');
+        return redirect()->route('setting');
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Settings Update Failed', 'Error');
+            return back();
+        }
     }
 
     /**

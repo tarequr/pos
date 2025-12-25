@@ -25,6 +25,9 @@
             font-size: 16px;
         }
     </style>
+
+    <link href="{{ asset('css/iziToast.css') }}" rel="stylesheet">
+
     @stack('css')
 </head>
 
@@ -54,6 +57,8 @@
             $('.dropify').dropify();
         });
     </script>
+    <script src="{{ asset('js/iziToast.js') }}"></script>
+    @include('vendor.lara-izitoast.toast')
     @stack('js')
 </body>
 
