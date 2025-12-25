@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -70,5 +71,31 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function changePassword(Request $request): View
+    {
+        return view('admin.pages.profile.change_password');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:8', 'different:current_password'],
+        ]);
+
+        try {
+            $user = $request->user();
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            notify()->success('Password changed successfully.', 'Success');
+            return back();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            notify()->error('Password change failed.', 'Error');
+            return back();
+        }
     }
 }

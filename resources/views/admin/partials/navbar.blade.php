@@ -88,12 +88,12 @@
                         alt="Charles Hall" />
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class='dropdown-item' href='{{ route('profile.edit') }}'>
+                    <a class='dropdown-item' href="{{ route('profile.edit') }}">
                         <i class="align-middle me-1" data-feather="user"></i>
                         Profile
                     </a>
 
-                    <a class='dropdown-item' href='#'>
+                    <a class='dropdown-item' href="{{ route('profile.password.edit') }}">
                         <i class="align-middle me-1" data-feather="lock"></i>
                         Change Password
                     </a>
@@ -101,7 +101,7 @@
 
                     <div class="dropdown-divider"></div>
 
-                    <a class='dropdown-item' href='{{ route('setting') }}'>
+                    <a class='dropdown-item' href="{{ route('setting') }}">
                         <i class="align-middle me-1" data-feather="settings"></i>
                         Settings & Privacy
                     </a>
