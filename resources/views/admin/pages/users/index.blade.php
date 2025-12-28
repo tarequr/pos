@@ -17,7 +17,7 @@
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    <table class="table table-striped">
+                    <table id="datatables-reponsive" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($users as $user)
+                            @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
@@ -47,19 +47,22 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">No users found.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
-                    <div class="mt-3">
-                        {{ $users->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#datatables-reponsive").DataTable({
+            responsive: true
+        });
+    });
+</script>
+@endpush

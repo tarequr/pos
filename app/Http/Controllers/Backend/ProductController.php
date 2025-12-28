@@ -16,13 +16,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::inStock()->with(['category', 'branch'])->latest()->get();
+        $products = Product::inStock()->with(['category:id,name', 'branch:id,name'])->orderBy('id', 'asc')->get();
         return view('admin.pages.products.index', compact('products'));
     }
 
     public function stockOutList()
     {
-        $products = Product::stockOut()->with(['category', 'branch'])->latest()->get();
+        $products = Product::stockOut()->with(['category:id,name', 'branch:id,name'])->orderBy('id', 'asc')->get();
         return view('admin.pages.products.stock_out', compact('products'));
     }
 
