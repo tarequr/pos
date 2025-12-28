@@ -145,68 +145,51 @@
             <div class="col-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header">
-                        <div class="card-actions float-end">
-                            <div class="dropdown position-relative">
-                                <a href="#" data-bs-toggle="dropdown" data-bs-display="static">
-                                    <i class="align-middle" data-feather="more-horizontal"></i>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
                         <h5 class="card-title mb-0">Latest Products</h5>
                     </div>
-                    <table class="table table-borderless my-0">
+                    <table class="table table-hover my-0">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th class="d-none d-xxl-table-cell">Category</th>
                                 <th class="d-none d-xl-table-cell">Branch</th>
                                 <th>Status</th>
-                                <th class="d-none d-xl-table-cell">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($latest_products as $product)
-                            <tr>
-                                <td>
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0">
-                                            <div class="bg-light rounded-2">
-                                                <div class="p-2">
-                                                    <i class="align-middle" data-feather="package"></i>
+                            @foreach ($latest_products as $product)
+                                <tr>
+                                    <td>
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-light rounded-2">
+                                                    <div class="p-2">
+                                                        <i class="align-middle" data-feather="package"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <strong>{{ $product->name }}</strong>
+                                                <div class="text-muted">
+                                                    {{ $product->serial_no }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex-grow-1 ms-3">
-                                            <strong>{{ $product->name }}</strong>
-                                            <div class="text-muted">
-                                                {{ $product->serial_no }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="d-none d-xxl-table-cell">
-                                    <strong>{{ $product->category->name ?? 'N/A' }}</strong>
-                                </td>
-                                <td class="d-none d-xl-table-cell">
-                                    <strong>{{ $product->branch->name ?? 'N/A' }}</strong>
-                                </td>
-                                <td>
-                                    @if($product->status === 'stock_in')
-                                        <span class="badge bg-success">In Stock</span>
-                                    @else
-                                        <span class="badge bg-danger">Stock Out</span>
-                                    @endif
-                                </td>
-                                <td class="d-none d-xl-table-cell">
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-light">Edit</a>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="d-none d-xxl-table-cell">
+                                        <strong>{{ $product->category->name ?? 'N/A' }}</strong>
+                                    </td>
+                                    <td class="d-none d-xl-table-cell">
+                                        <strong>{{ $product->branch->name ?? 'N/A' }}</strong>
+                                    </td>
+                                    <td>
+                                        @if ($product->status === 'stock_in')
+                                            <span class="badge bg-success">In Stock</span>
+                                        @else
+                                            <span class="badge bg-danger">Stock Out</span>
+                                        @endif
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>

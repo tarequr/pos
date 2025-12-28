@@ -20,6 +20,7 @@
                     <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
+                                <th>SL</th>
                                 <th>Name</th>
                                 <th>Slug</th>
                                 <th>Status</th>
@@ -29,6 +30,7 @@
                         <tbody>
                             @foreach ($branches as $branch)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $branch->name }}</td>
                                     <td>{{ $branch->slug }}</td>
                                     <td>

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('serial_no')->unique(); // Serial must be unique
             $table->string('status')->default('stock_in')->comment('stock_in, stock_out, returned'); // 'stock_in', 'stock_out', 'returned'
+            $table->foreignId('stock_in_by')->nullable()->constrained('users');
+            $table->date('stock_in_date')->nullable();
+            $table->foreignId('stock_out_by')->nullable()->constrained('users');
+            $table->date('stock_out_date')->nullable();
             $table->timestamps();
         });
     }

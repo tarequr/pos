@@ -17,6 +17,7 @@
                     <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
+                                <th>SL</th>
                                 <th>Name</th>
                                 <th>Category</th>
                                 <th>Branch</th>
@@ -28,6 +29,7 @@
                         <tbody>
                             @foreach ($products as $product)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->category->name ?? 'N/A' }}</td>
                                     <td>{{ $product->branch->name ?? 'N/A' }}</td>
