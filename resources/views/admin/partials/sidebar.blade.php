@@ -3,7 +3,7 @@
         <a class='sidebar-brand' href="{{ route('dashboard') }}">
             <span class="sidebar-brand-text align-middle">
                 <!-- {{ config('app.name') }} -->
-                  POS
+                POS
             </span>
         </a>
 
@@ -12,32 +12,36 @@
                 Main Menu
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a class='sidebar-link' href="{{ route('dashboard') }}">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item {{ request()->routeIs('users.index') ? 'active' : '' }}">
                 <a class='sidebar-link' href="{{ route('users.index') }}">
                     <i class="align-middle" data-feather="user"></i> <span class="align-middle">Users</span>
                 </a>
             </li>
 
-            <li class="sidebar-item active">
+            <li
+                class="sidebar-item {{ request()->routeIs('products.index') || request()->routeIs('products.stock_out_list') ? 'active' : '' }}">
                 <a data-bs-target="#products" data-bs-toggle="collapse" class="sidebar-link">
                     <i class="align-middle" data-feather="package"></i> <span class="align-middle">Products</span>
                 </a>
-                <ul id="products" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-                    <li class="sidebar-item active"><a class='sidebar-link'
-                            href="{{ route('products.index') }}">Product List</a>
+                <ul id="products"
+                    class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('products.index') || request()->routeIs('products.stock_out_list') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar">
+                    <li class="sidebar-item {{ request()->routeIs('products.index') ? 'active' : '' }}"><a
+                            class='sidebar-link' href="{{ route('products.index') }}">Product
+                            List</a>
                     </li>
-                    <li class="sidebar-item"><a class='sidebar-link'
-                            href="{{ route('products.stock_out_list') }}">Stock Out List</a>
+                    <li class="sidebar-item {{ request()->routeIs('products.stock_out_list') ? 'active' : '' }}"><a
+                            class='sidebar-link' href="{{ route('products.stock_out_list') }}">Stock
+                            Out List</a>
                     </li>
                 </ul>
             </li>
-
-
-
-
-
-
-
 
 
 
@@ -191,16 +195,20 @@
             <li class="sidebar-header">
                 Lookups
             </li>
-            <li class="sidebar-item active">
+            <li
+                class="sidebar-item {{ request()->routeIs('categories.index') || request()->routeIs('branches.index') ? 'active' : '' }}">
                 <a data-bs-target="#lookups" data-bs-toggle="collapse" class="sidebar-link">
-                    <i class="align-middle" data-feather="check-circle"></i> <span class="align-middle">Lookups</span>
+                    <i class="align-middle" data-feather="check-circle"></i> <span
+                        class="align-middle">Lookups</span>
                 </a>
-                <ul id="lookups" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-                    <li class="sidebar-item active"><a class='sidebar-link'
-                            href="{{ route('categories.index') }}">Categories</a>
+                <ul id="lookups"
+                    class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('categories.index') || request()->routeIs('branches.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar">
+                    <li class="sidebar-item {{ request()->routeIs('categories.index') ? 'active' : '' }}"><a
+                            class='sidebar-link' href="{{ route('categories.index') }}">Categories</a>
                     </li>
-                    <li class="sidebar-item"><a class='sidebar-link'
-                            href="{{ route('branches.index') }}">Branches</a>
+                    <li class="sidebar-item {{ request()->routeIs('branches.index') ? 'active' : '' }}"><a
+                            class='sidebar-link' href="{{ route('branches.index') }}">Branches</a>
                     </li>
                 </ul>
             </li>
@@ -209,7 +217,7 @@
                 Settings
             </li>
 
-            <li class="sidebar-item active">
+            <li class="sidebar-item {{ request()->routeIs('setting') ? 'active' : '' }}">
                 <a class='sidebar-link' href="{{ route('setting') }}">
                     <i class="align-middle" data-feather="settings"></i>
                     <span class="align-middle">Settings</span>
