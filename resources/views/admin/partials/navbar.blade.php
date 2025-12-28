@@ -84,8 +84,9 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                    <img src="{{ asset('admin/img/avatars/avatar.jpg') }}" class="avatar img-fluid rounded"
-                        alt="Charles Hall" />
+                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('admin/img/avatars/avatar.jpg') }}"
+                        class="avatar img-fluid rounded"
+                        alt="{{ auth()->user()->name }}" />
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class='dropdown-item' href="{{ route('profile.edit') }}">
