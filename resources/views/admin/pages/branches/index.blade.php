@@ -17,7 +17,7 @@
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    <table class="table table-striped">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -48,12 +48,21 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="mt-3">
-                        {{ $branches->links() }}
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Datatables Responsive
+            $("#datatables-reponsive").DataTable({
+                responsive: true
+            });
+        });
+    </script>
+@endpush

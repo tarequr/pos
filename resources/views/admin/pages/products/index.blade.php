@@ -17,7 +17,7 @@
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    <table class="table table-striped">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -29,7 +29,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($products as $product)
+                            @foreach ($products as $product)
                                 <tr>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->category->name ?? 'N/A' }}</td>
@@ -51,19 +51,24 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center">No products found.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
-                    <div class="mt-3">
-                        {{ $products->links() }}
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Datatables Responsive
+            $("#datatables-reponsive").DataTable({
+                responsive: true
+            });
+        });
+    </script>
+@endpush

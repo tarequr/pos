@@ -14,7 +14,7 @@
                     <h5 class="card-title mb-0">Stock Out Product List</h5>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -26,7 +26,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($products as $product)
+                            @foreach ($products as $product)
                                 <tr>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->category->name ?? 'N/A' }}</td>
@@ -37,19 +37,24 @@
                                     </td>
                                     <td>{{ $product->updated_at->format('Y-m-d H:i') }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">No stock out products found.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
-                    <div class="mt-3">
-                        {{ $products->links() }}
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Datatables Responsive
+            $("#datatables-reponsive").DataTable({
+                responsive: true
+            });
+        });
+    </script>
+@endpush
