@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBranchRequest;
+use App\Http\Requests\UpdateBranchRequest;
 use App\Models\Branch;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class BranchController extends Controller
 {
@@ -15,7 +15,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branches = \App\Models\Branch::latest()->paginate(10);
+        $branches = Branch::latest()->paginate(10);
         return view('admin.pages.branches.index', compact('branches'));
     }
 
@@ -30,15 +30,15 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(\App\Http\Requests\StoreBranchRequest $request)
+    public function store(StoreBranchRequest $request)
     {
-        $data = $request->validated();
+        $data         = $request->validated();
         $data['slug'] = Str::slug($request->name);
         try {
-        \App\Models\Branch::create($data);
+            Branch::create($data);
 
-        notify()->success('Branch created successfully.', 'Success');
-        return redirect()->route('branches.index');
+            notify()->success('Branch created successfully.', 'Success');
+            return redirect()->route('branches.index');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
@@ -58,7 +58,7 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(\App\Models\Branch $branch)
+    public function edit(Branch $branch)
     {
         return view('admin.pages.branches.edit', compact('branch'));
     }
@@ -66,15 +66,15 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\App\Http\Requests\UpdateBranchRequest $request, \App\Models\Branch $branch)
+    public function update(UpdateBranchRequest $request, Branch $branch)
     {
-        $data = $request->validated();
+        $data         = $request->validated();
         $data['slug'] = Str::slug($request->name);
         try {
-        $branch->update($data);
+            $branch->update($data);
 
-        notify()->success('Branch updated successfully.', 'Success');
-        return redirect()->route('branches.index');
+            notify()->success('Branch updated successfully.', 'Success');
+            return redirect()->route('branches.index');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
@@ -86,13 +86,13 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(\App\Models\Branch $branch)
+    public function destroy(Branch $branch)
     {
         try {
-        $branch->delete();
+            $branch->delete();
 
-        notify()->success('Branch deleted successfully.', 'Success');
-        return redirect()->route('branches.index');
+            notify()->success('Branch deleted successfully.', 'Success');
+            return redirect()->route('branches.index');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());

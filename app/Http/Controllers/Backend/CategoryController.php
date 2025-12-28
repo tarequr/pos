@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -15,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = \App\Models\Category::latest()->paginate(10);
+        $categories = Category::latest()->paginate(10);
         return view('admin.pages.categories.index', compact('categories'));
     }
 
@@ -32,10 +30,10 @@ class CategoryController extends Controller
      */
     public function store(\App\Http\Requests\StoreCategoryRequest $request)
     {
-        $data = $request->validated();
+        $data         = $request->validated();
         $data['slug'] = Str::slug($request->name);
         try {
-            \App\Models\Category::create($data);
+            Category::create($data);
 
             notify()->success('Category created successfully.', 'Success');
             return redirect()->route('categories.index');
@@ -57,7 +55,7 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(\App\Models\Category $category)
+    public function edit(Category $category)
     {
         return view('admin.pages.categories.edit', compact('category'));
     }
@@ -65,9 +63,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\App\Http\Requests\UpdateCategoryRequest $request, \App\Models\Category $category)
+    public function update(\App\Http\Requests\UpdateCategoryRequest $request, Category $category)
     {
-        $data = $request->validated();
+        $data         = $request->validated();
         $data['slug'] = Str::slug($request->name);
         try {
             $category->update($data);
@@ -84,7 +82,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(\App\Models\Category $category)
+    public function destroy(Category $category)
     {
         try {
             $category->delete();

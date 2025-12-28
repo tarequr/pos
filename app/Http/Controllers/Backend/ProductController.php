@@ -1,11 +1,11 @@
 <?php
+namespace App\Http\Controllers\Backend;
 
-namespace App\Http\Controllers;
-
-use App\Models\Category;
-use App\Models\Branch;
-use App\Models\Product;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Models\Branch;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -32,7 +32,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::where('status', true)->get();
-        $branches = Branch::where('status', true)->get();
+        $branches   = Branch::where('status', true)->get();
         return view('admin.pages.products.create', compact('categories', 'branches'));
     }
 
@@ -46,9 +46,9 @@ class ProductController extends Controller
 
             $commonData = [
                 'category_id' => $request->category_id,
-                'branch_id' => $request->branch_id,
-                'name' => $request->name,
-                'status' => 'stock_in',
+                'branch_id'   => $request->branch_id,
+                'name'        => $request->name,
+                'status'      => 'stock_in',
             ];
 
             if ($request->serial_type === 'single') {
@@ -58,14 +58,14 @@ class ProductController extends Controller
             } else {
                 // Range
                 $start = (int) $request->serial_start;
-                $end = (int) $request->serial_end;
+                $end   = (int) $request->serial_end;
 
                 for ($i = $start; $i <= $end; $i++) {
-                    // Check if serial exists to prevent error inside loop? 
+                    // Check if serial exists to prevent error inside loop?
                     // Or catch exception. For now, rely on validation or unique constraint.
-                    // Ideally we should bulk insert for performance if range is huge, 
+                    // Ideally we should bulk insert for performance if range is huge,
                     // but for reasonable ranges loop is fine and safer for validaton.
-                     Product::create(array_merge($commonData, [
+                    Product::create(array_merge($commonData, [
                         'serial_no' => (string) $i,
                     ]));
                 }
@@ -79,10 +79,10 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            // Check for duplicate entry error specifically?
+                                                                                    // Check for duplicate entry error specifically?
             if (str_contains($e->getMessage(), 'Integrity constraint violation')) { // Duplicate entry
-                 notify()->error('One or more serial numbers in the range already exist.', 'Error');
-                 return back()->withInput();
+                notify()->error('One or more serial numbers in the range already exist.', 'Error');
+                return back()->withInput();
             }
             notify()->error('Something went wrong: ' . $e->getMessage(), 'Error');
             return back()->withInput();
