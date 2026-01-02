@@ -84,6 +84,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
+                pageLength: 100, // Default per page 100
                 ajax: {
                     url: "{{ route('products.index') }}",
                     data: function (d) {

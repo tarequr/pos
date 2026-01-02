@@ -121,10 +121,84 @@ class ProductController extends Controller
         }
     }
 
-    public function stockOutList()
+    public function stockOutList(\Illuminate\Http\Request $request)
     {
-        $products = Product::stockOut()->with(['category:id,name', 'branch:id,name'])->orderBy('id', 'asc')->get();
-        return view('admin.pages.products.stock_out', compact('products'));
+        if ($request->ajax()) {
+            $query = Product::stockOut()->with(['category:id,name', 'branch:id,name']);
+
+            // Filtering
+            if ($request->category_id) {
+                $query->where('products.category_id', $request->category_id);
+            }
+            if ($request->branch_id) {
+                $query->where('products.branch_id', $request->branch_id);
+            }
+
+            // Searching
+            if ($request->search['value']) {
+                $searchValue = $request->search['value'];
+                $query->where(function($q) use ($searchValue) {
+                    $q->where('serial_no', 'like', "%{$searchValue}%")
+                      ->orWhereHas('category', function($cq) use ($searchValue) {
+                          $cq->where('name', 'like', "%{$searchValue}%");
+                      })
+                      ->orWhereHas('branch', function($bq) use ($searchValue) {
+                          $bq->where('name', 'like', "%{$searchValue}%");
+                      });
+                });
+            }
+
+            // Ordering
+            if ($request->has('order')) {
+                $columnIndex = $request->order[0]['column'];
+                $columnName = $request->columns[$columnIndex]['data'];
+                $columnDirection = $request->order[0]['dir'];
+
+                if ($columnName === 'category.name') {
+                    $query->join('categories', 'products.category_id', '=', 'categories.id')
+                          ->orderBy('categories.name', $columnDirection)
+                          ->select('products.*');
+                } elseif ($columnName === 'branch.name') {
+                    $query->join('branches', 'products.branch_id', '=', 'branches.id')
+                          ->orderBy('branches.name', $columnDirection)
+                          ->select('products.*');
+                } elseif (in_array($columnName, ['serial_no', 'updated_at'])) {
+                    $query->orderBy('products.' . $columnName, $columnDirection);
+                }
+            } else {
+                $query->orderBy('products.updated_at', 'desc');
+            }
+
+            $totalRecords = Product::stockOut()->count();
+            $filteredRecords = $query->count();
+
+            // Pagination
+            $start  = $request->get('start');
+            $length = $request->get('length');
+            $products = $query->skip($start)->take($length)->get();
+
+            $data = $products->map(function($product, $index) use ($start) {
+                return [
+                    'DT_RowIndex' => $start + $index + 1,
+                    'category' => ['name' => $product->category->name ?? 'N/A'],
+                    'branch' => ['name' => $product->branch->name ?? 'N/A'],
+                    'serial_no' => $product->serial_no,
+                    'status' => '<span class="badge bg-danger">Stock Out</span>',
+                    'updated_at' => $product->updated_at->format('d/m/Y h:i A'),
+                ];
+            });
+
+            return response()->json([
+                'draw' => intval($request->draw),
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $filteredRecords,
+                'data' => $data,
+            ]);
+        }
+
+        $categories = Category::where('status', true)->get();
+        $branches   = Branch::where('status', true)->get();
+        return view('admin.pages.products.stock_out', compact('categories', 'branches'));
     }
 
     /**
