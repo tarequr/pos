@@ -30,11 +30,11 @@ class Product extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('status', 'stock_in');
+        return $query->where('products.status', 'stock_in');
     }
 
     public function scopeStockOut($query)
     {
-        return $query->where('status', 'stock_out');
+        return $query->where('products.status', 'stock_out');
     }
 }

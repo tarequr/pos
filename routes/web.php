@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::get('stock-out-products', [ProductController::class, 'stockOutList'])->name('products.stock_out_list');
     Route::post('products/{product}/stock-out', [ProductController::class, 'stockOut'])->name('products.stock-out');
+    Route::post('products/bulk-stock-out', [ProductController::class, 'bulkStockOut'])->name('products.bulk-stock-out');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
