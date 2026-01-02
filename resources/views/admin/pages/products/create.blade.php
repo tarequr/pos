@@ -28,12 +28,6 @@
                         @endif
 
                         <div class="row">
-                            <!-- Name -->
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">Product Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter Product Name" required>
-                            </div>
-
                             <!-- Category -->
                             <div class="col-md-6 mb-3">
                                 <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
@@ -46,11 +40,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <!-- Branch -->
-                             <div class="col-md-12 mb-3">
+                             <div class="col-md-6 mb-3">
                                 <label for="branch_id" class="form-label">Branch <span class="text-danger">*</span></label>
                                 <select class="form-control" id="branch_id" name="branch_id" required>
                                     <option value="">Select Branch</option>
@@ -74,12 +66,16 @@
                                 <input class="form-check-input" type="radio" name="serial_type" id="serial_range" value="range" {{ old('serial_type') === 'range' ? 'checked' : '' }} onclick="toggleSerialInput('range')">
                                 <label class="form-check-label" for="serial_range">Range Entry (e.g. 1-10)</label>
                             </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="serial_type" id="serial_bulk" value="bulk" {{ old('serial_type') === 'bulk' ? 'checked' : '' }} onclick="toggleSerialInput('bulk')">
+                                <label class="form-check-label" for="serial_bulk">Bulk Entry (50)</label>
+                            </div>
                         </div>
 
                         <!-- Single Serial Input -->
                         <div id="single-input" class="mb-3" style="{{ old('serial_type', 'single') === 'single' ? '' : 'display:none;' }}">
                             <label for="serial_no" class="form-label">Serial Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="serial_no" name="serial_no" value="{{ old('serial_no') }}" placeholder="Enter Serial Number">
+                            <input type="number" class="form-control" id="serial_no" name="serial_no" value="{{ old('serial_no') }}" placeholder="Enter Serial Number">
                         </div>
 
                         <!-- Range Serial Input -->
@@ -91,6 +87,20 @@
                             <div class="col-md-6">
                                 <label for="serial_end" class="form-label">End Serial (Number) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="serial_end" name="serial_end" value="{{ old('serial_end') }}" placeholder="End Number">
+                            </div>
+                        </div>
+
+                        <!-- Bulk Serial Input -->
+                        <div id="bulk-input" class="mb-3" style="{{ old('serial_type') === 'bulk' ? '' : 'display:none;' }}">
+                            <div class="row">
+                                @for($i = 1; $i <= 50; $i++)
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Serial Number {{ $i }}</label>
+                                        <input type="number" class="form-control" name="bulk_serials[]" 
+                                               value="{{ old('bulk_serials.' . ($i-1)) }}" 
+                                               placeholder="Enter Serial Number">
+                                    </div>
+                                @endfor
                             </div>
                         </div>
 
@@ -108,14 +118,29 @@
 <script>
     function toggleSerialInput(type) {
         const singleInput = document.getElementById('single-input');
-        const rangeInput = document.getElementById('range-input');
+        const rangeInput  = document.getElementById('range-input');
+        const bulkInput   = document.getElementById('bulk-input');
+
+        // Hide all
+        singleInput.style.display = 'none';
+        rangeInput.style.display  = 'none';
+        bulkInput.style.display   = 'none';
+
+        // Clear all inputs when type changes
+        document.getElementById('serial_no').value = '';
+        document.getElementById('serial_start').value = '';
+        document.getElementById('serial_end').value = '';
+        const bulkSerials = document.getElementsByName('bulk_serials[]');
+        for (let i = 0; i < bulkSerials.length; i++) {
+            bulkSerials[i].value = '';
+        }
 
         if (type === 'single') {
             singleInput.style.display = 'block';
-            rangeInput.style.display = 'none';
-        } else {
-            singleInput.style.display = 'none';
-            rangeInput.style.display = 'flex'; // Use flex for row behavior
+        } else if (type === 'range') {
+            rangeInput.style.display  = 'flex';
+        } else if (type === 'bulk') {
+            bulkInput.style.display   = 'block';
         }
     }
 </script>

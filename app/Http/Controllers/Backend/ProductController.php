@@ -47,7 +47,6 @@ class ProductController extends Controller
             $commonData = [
                 'category_id' => $request->category_id,
                 'branch_id'   => $request->branch_id,
-                'name'        => $request->name,
                 'status'      => 'stock_in',
             ];
 
@@ -55,18 +54,22 @@ class ProductController extends Controller
                 Product::create(array_merge($commonData, [
                     'serial_no' => $request->serial_no,
                 ]));
-            } else {
+            } elseif ($request->serial_type === 'range') {
                 // Range
                 $start = (int) $request->serial_start;
                 $end   = (int) $request->serial_end;
 
                 for ($i = $start; $i <= $end; $i++) {
-                    // Check if serial exists to prevent error inside loop?
-                    // Or catch exception. For now, rely on validation or unique constraint.
-                    // Ideally we should bulk insert for performance if range is huge,
-                    // but for reasonable ranges loop is fine and safer for validaton.
                     Product::create(array_merge($commonData, [
                         'serial_no' => (string) $i,
+                    ]));
+                }
+            } elseif ($request->serial_type === 'bulk') {
+                // Bulk
+                $serials = array_filter($request->bulk_serials);
+                foreach ($serials as $serial) {
+                    Product::create(array_merge($commonData, [
+                        'serial_no' => $serial,
                     ]));
                 }
             }

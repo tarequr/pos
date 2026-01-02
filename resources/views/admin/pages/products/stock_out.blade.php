@@ -18,7 +18,6 @@
                             <thead>
                                 <tr>
                                     <th>SL</th>
-                                    <th>Name</th>
                                     <th>Category</th>
                                     <th>Branch</th>
                                     <th>Serial</th>
@@ -30,7 +29,6 @@
                                 @foreach ($products as $product)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $product->name }}</td>
                                         <td>{{ $product->category->name ?? 'N/A' }}</td>
                                         <td>{{ $product->branch->name ?? 'N/A' }}</td>
                                         <td>{{ $product->serial_no }}</td>
