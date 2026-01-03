@@ -128,13 +128,15 @@
                                         </tr>
                                     @endforelse
 
-                                    @if(count($products) > 0)
-                                        <tr class="fw-bold footer-totals">
+                                </tbody>
+                                @if(count($products) > 0)
+                                    <tfoot class="table-light fw-bold">
+                                        <tr>
                                             <td colspan="4" class="text-end">TOTAL PRODUCTS:</td>
                                             <td colspan="3" class="text-center">{{ count($products) }} Items</td>
                                         </tr>
-                                    @endif
-                                </tbody>
+                                    </tfoot>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -203,11 +205,10 @@
             font-size: 12px;
             color: #000 !important;
         }
-        .report-table tr {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+        .report-table tfoot {
+            display: table-row-group; /* Treats footer as body rows to prevent repeating and fix pagination */
         }
-        .footer-totals td {
+        .report-table tfoot tr td {
             background-color: #f2f2f2 !important;
             border: 2px solid #000 !important;
             border-bottom: 3px solid #000 !important;
@@ -215,6 +216,9 @@
             font-size: 14px !important;
             color: #000 !important;
             padding: 10px 5px !important;
+        }
+        .report-table thead {
+            display: table-row-group; /* Prevents header from repeating on every page */
         }
         .report-table thead th {
             border: 2px solid #000 !important;
@@ -225,10 +229,11 @@
             border-collapse: collapse !important;
             width: 100% !important;
         }
+        /* Clean up badges for print */
         .badge {
             border: none !important;
             padding: 0 !important;
-            color: black !important;
+            color: #000 !important;
             background: transparent !important;
             font-weight: normal;
         }
