@@ -43,7 +43,11 @@
                 </ul>
             </li>
 
-
+            <li class="sidebar-item {{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                <a class='sidebar-link' href="{{ route('reports.index') }}">
+                    <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Reports</span>
+                </a>
+            </li>
 
 
 
