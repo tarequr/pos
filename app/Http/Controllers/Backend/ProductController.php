@@ -222,6 +222,8 @@ class ProductController extends Controller
             $commonData = [
                 'category_id' => $request->category_id,
                 'branch_id'   => $request->branch_id,
+                'stock_in_by' => auth()->user()->id,
+                'stock_in_date' => now(),
                 'status'      => 'stock_in',
             ];
 
@@ -270,7 +272,12 @@ class ProductController extends Controller
     public function stockOut(Product $product)
     {
         try {
-            $product->update(['status' => 'stock_out']);
+            $product->update([
+                'status' => 'stock_out',
+                'stock_out_by' => auth()->user()->id,
+                'stock_out_date' => now(),
+            ]);
+            
             notify()->success('Product marked as Stock Out.', 'Success');
             return redirect()->back();
 
