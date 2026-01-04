@@ -109,7 +109,11 @@ class ProductController extends Controller
                 return back();
             }
 
-            Product::whereIn('id', $ids)->update(['status' => 'stock_out']);
+            Product::whereIn('id', $ids)->update([
+                'status' => 'stock_out',
+                'stock_out_by' => auth()->user()->id,
+                'stock_out_date' => today(),
+            ]);
 
             notify()->success('Selected products marked as Stock Out successfully.', 'Success');
             return redirect()->back();
@@ -223,7 +227,7 @@ class ProductController extends Controller
                 'category_id' => $request->category_id,
                 'branch_id'   => $request->branch_id,
                 'stock_in_by' => auth()->user()->id,
-                'stock_in_date' => now(),
+                'stock_in_date' => today(),
                 'status'      => 'stock_in',
             ];
 
@@ -275,7 +279,7 @@ class ProductController extends Controller
             $product->update([
                 'status' => 'stock_out',
                 'stock_out_by' => auth()->user()->id,
-                'stock_out_date' => now(),
+                'stock_out_date' => today(),
             ]);
             
             notify()->success('Product marked as Stock Out.', 'Success');
