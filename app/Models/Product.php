@@ -16,6 +16,10 @@ class Product extends Model
         'branch_id',
         'serial_no',
         'status',
+        'stock_in_by',
+        'stock_in_date',
+        'stock_out_by',
+        'stock_out_date',
     ];
 
     public function category()
