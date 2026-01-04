@@ -278,54 +278,24 @@
             <div class="col-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Latest Products</h5>
+                        <h5 class="card-title mb-0">Products List</h5>
                     </div>
-                    <table class="table table-hover my-0">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th class="d-none d-xxl-table-cell">Category</th>
-                                <th class="d-none d-xl-table-cell">Branch</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($latest_products as $product)
+                    <div class="card-body">
+                        <table id="latest-products-table" class="table table-hover my-0" style="width:100%">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <div class="bg-light rounded-2">
-                                                    <div class="p-2">
-                                                        <i class="align-middle" data-feather="package"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <strong>{{ $product->name }}</strong>
-                                                <div class="text-muted">
-                                                    {{ $product->serial_no }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="d-none d-xxl-table-cell">
-                                        <strong>{{ $product->category->name ?? 'N/A' }}</strong>
-                                    </td>
-                                    <td class="d-none d-xl-table-cell">
-                                        <strong>{{ $product->branch->name ?? 'N/A' }}</strong>
-                                    </td>
-                                    <td>
-                                        @if ($product->status === 'stock_in')
-                                            <span class="badge bg-success">In Stock</span>
-                                        @else
-                                            <span class="badge bg-danger">Stock Out</span>
-                                        @endif
-                                    </td>
+                                    <th>SL</th>
+                                    <th>Category</th>
+                                    <th>Branch</th>
+                                    <th>Serial</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -333,3 +303,50 @@
 
     </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            $("#latest-products-table").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                pageLength: 10,
+                ajax: {
+                    url: "{{ route('dashboard') }}",
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'category.name', name: 'category.name' },
+                    { data: 'branch.name', name: 'branch.name' },
+                    { 
+                        data: 'serial_no', 
+                        name: 'serial_no',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-light rounded-2">
+                                            <div class="p-2">
+                                                <i class="align-middle" data-feather="package"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <strong>${data}</strong>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                ],
+                order: [[0, 'desc']],
+                drawCallback: function() {
+                    feather.replace();
+                }
+            });
+        });
+    </script>
+@endpush
