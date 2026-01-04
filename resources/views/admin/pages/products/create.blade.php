@@ -89,7 +89,7 @@
                                 <label for="serial_no" class="form-label">Serial Number <span
                                         class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="serial_no" name="serial_no"
-                                    value="{{ old('serial_no') }}" placeholder="Enter Serial Number">
+                                    value="{{ old('serial_no') }}" placeholder="Enter Serial Number" {{ old('serial_type', 'single') === 'single' ? 'required' : '' }}>
                             </div>
 
                             <!-- Range Serial Input -->
@@ -99,13 +99,13 @@
                                     <label for="serial_start" class="form-label">Start Serial (Number) <span
                                             class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="serial_start" name="serial_start"
-                                        value="{{ old('serial_start') }}" placeholder="Start Number">
+                                        value="{{ old('serial_start') }}" placeholder="Start Number" {{ old('serial_type') === 'range' ? 'required' : '' }}>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="serial_end" class="form-label">End Serial (Number) <span
                                             class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="serial_end" name="serial_end"
-                                        value="{{ old('serial_end') }}" placeholder="End Number">
+                                        value="{{ old('serial_end') }}" placeholder="End Number" {{ old('serial_type') === 'range' ? 'required' : '' }}>
                                 </div>
                             </div>
 
@@ -117,8 +117,8 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Serial Number {{ $i }}</label>
                                             <input type="number" class="form-control" name="bulk_serials[]"
-                                                value="{{ old('bulk_serials.' . ($i - 1)) }}" required
-                                                placeholder="Enter Serial Number">
+                                                value="{{ old('bulk_serials.' . ($i - 1)) }}"
+                                                placeholder="Enter Serial Number" {{ old('serial_type') === 'bulk' ? 'required' : '' }}>
                                         </div>
                                     @endfor
                                 </div>
@@ -144,26 +144,44 @@
             const rangeInput = document.getElementById('range-input');
             const bulkInput = document.getElementById('bulk-input');
 
+            const serialNo = document.getElementById('serial_no');
+            const serialStart = document.getElementById('serial_start');
+            const serialEnd = document.getElementById('serial_end');
+            const bulkSerials = document.getElementsByName('bulk_serials[]');
+
             // Hide all
             singleInput.style.display = 'none';
             rangeInput.style.display = 'none';
             bulkInput.style.display = 'none';
 
+            // Remove required attribute from all inputs
+            serialNo.removeAttribute('required');
+            serialStart.removeAttribute('required');
+            serialEnd.removeAttribute('required');
+            for (let i = 0; i < bulkSerials.length; i++) {
+                bulkSerials[i].removeAttribute('required');
+            }
+
             // Clear all inputs when type changes
-            document.getElementById('serial_no').value = '';
-            document.getElementById('serial_start').value = '';
-            document.getElementById('serial_end').value = '';
-            const bulkSerials = document.getElementsByName('bulk_serials[]');
+            serialNo.value = '';
+            serialStart.value = '';
+            serialEnd.value = '';
             for (let i = 0; i < bulkSerials.length; i++) {
                 bulkSerials[i].value = '';
             }
 
             if (type === 'single') {
                 singleInput.style.display = 'block';
+                serialNo.setAttribute('required', 'required');
             } else if (type === 'range') {
                 rangeInput.style.display = 'flex';
+                serialStart.setAttribute('required', 'required');
+                serialEnd.setAttribute('required', 'required');
             } else if (type === 'bulk') {
                 bulkInput.style.display = 'block';
+                for (let i = 0; i < bulkSerials.length; i++) {
+                    bulkSerials[i].setAttribute('required', 'required');
+                }
             }
         }
     </script>
