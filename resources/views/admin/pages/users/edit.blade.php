@@ -36,7 +36,7 @@
                                 <label for="user_type" class="form-label">Role <span class="text-danger">*</span></label>
                                 <select class="form-control" id="user_type" name="user_type" required>
                                     <option value="user" {{ $user->user_type === 'user' ? 'selected' : '' }}>User</option>
-                                    <option value="admin" {{ $user->user_type === 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <!-- <option value="admin" {{ $user->user_type === 'admin' ? 'selected' : '' }}>Admin</option> -->
                                 </select>
                             </div>
                         </div>

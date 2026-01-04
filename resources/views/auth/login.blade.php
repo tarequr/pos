@@ -65,9 +65,9 @@
                                                     {{ $errors->first('password') }}
                                                 </div>
                                             @endif
-                                            <small>
+                                            <!-- <small>
                                                 <a href='{{ route('password.request') }}'>Forgot password?</a>
-                                            </small>
+                                            </small> -->
                                         </div>
                                         <div>
                                             <div class="form-check align-items-center">

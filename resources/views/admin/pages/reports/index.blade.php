@@ -41,7 +41,7 @@
                                     <option value="">All Status</option>
                                     <option value="stock_in" {{ request('status') == 'stock_in' ? 'selected' : '' }}>Stock In</option>
                                     <option value="stock_out" {{ request('status') == 'stock_out' ? 'selected' : '' }}>Stock Out</option>
-                                    <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option>
+                                    <!-- <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option> -->
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">

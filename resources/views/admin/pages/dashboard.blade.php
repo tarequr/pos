@@ -298,7 +298,51 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Category Stock Levels</h5>
+                    </div>
+                    <div class="card-body">
+                        <table id="category-stats-table" class="table table-hover my-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Category Name</th>
+                                    <th>Stock In</th>
+                                    <th>Stock Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Branch Stock Levels</h5>
+                    </div>
+                    <div class="card-body">
+                        <table id="branch-stats-table" class="table table-hover my-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Branch Name</th>
+                                    <th>Stock In</th>
+                                    <th>Stock Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -307,6 +351,7 @@
 @push('js')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Products Table
             $("#latest-products-table").DataTable({
                 processing: true,
                 serverSide: true,
@@ -314,6 +359,7 @@
                 pageLength: 10,
                 ajax: {
                     url: "{{ route('dashboard') }}",
+                    data: { table_type: 'products' }
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
@@ -346,6 +392,44 @@
                 drawCallback: function() {
                     feather.replace();
                 }
+            });
+
+            // Category Stats Table
+            $("#category-stats-table").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                pageLength: 10,
+                searching: true,
+                ajax: {
+                    url: "{{ route('dashboard') }}",
+                    data: { table_type: 'categories' }
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'stock_in', name: 'stock_in', orderable: false, searchable: false },
+                    { data: 'stock_out', name: 'stock_out', orderable: false, searchable: false },
+                ]
+            });
+
+            // Branch Stats Table
+            $("#branch-stats-table").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                pageLength: 10,
+                searching: true,
+                ajax: {
+                    url: "{{ route('dashboard') }}",
+                    data: { table_type: 'branches' }
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'stock_in', name: 'stock_in', orderable: false, searchable: false },
+                    { data: 'stock_out', name: 'stock_out', orderable: false, searchable: false },
+                ]
             });
         });
     </script>
