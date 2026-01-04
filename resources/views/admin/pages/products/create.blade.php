@@ -126,10 +126,10 @@
 
                             <div class="d-flex justify-content-end">
                                 <a href="{{ route('products.index') }}" class="btn btn-secondary me-2">Cancel</a>
-                                <button type="submit" class="btn btn-primary"
+                                {{-- <button type="submit" class="btn btn-primary"
                                     onclick="return confirm('Are you sure you want to save this product?')">Save
-                                    Product</button>
-                                {{-- <button type="submit" class="btn btn-primary">Save Product</button> --}}
+                                    Product</button> --}}
+                                <button type="submit" class="btn btn-primary">Save Product</button>
                             </div>
                         </form>
                     </div>
