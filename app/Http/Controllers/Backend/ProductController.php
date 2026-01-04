@@ -30,31 +30,31 @@ class ProductController extends Controller
             // Searching
             if ($request->search['value']) {
                 $searchValue = $request->search['value'];
-                $query->where(function($q) use ($searchValue) {
+                $query->where(function ($q) use ($searchValue) {
                     $q->where('serial_no', 'like', "%{$searchValue}%")
-                      ->orWhereHas('category', function($cq) use ($searchValue) {
-                          $cq->where('name', 'like', "%{$searchValue}%");
-                      })
-                      ->orWhereHas('branch', function($bq) use ($searchValue) {
-                          $bq->where('name', 'like', "%{$searchValue}%");
-                      });
+                        ->orWhereHas('category', function ($cq) use ($searchValue) {
+                            $cq->where('name', 'like', "%{$searchValue}%");
+                        })
+                        ->orWhereHas('branch', function ($bq) use ($searchValue) {
+                            $bq->where('name', 'like', "%{$searchValue}%");
+                        });
                 });
             }
 
             // Ordering
             if ($request->has('order')) {
-                $columnIndex = $request->order[0]['column'];
-                $columnName = $request->columns[$columnIndex]['data'];
+                $columnIndex     = $request->order[0]['column'];
+                $columnName      = $request->columns[$columnIndex]['data'];
                 $columnDirection = $request->order[0]['dir'];
 
                 if ($columnName === 'category.name') {
                     $query->join('categories', 'products.category_id', '=', 'categories.id')
-                          ->orderBy('categories.name', $columnDirection)
-                          ->select('products.*');
+                        ->orderBy('categories.name', $columnDirection)
+                        ->select('products.*');
                 } elseif ($columnName === 'branch.name') {
                     $query->join('branches', 'products.branch_id', '=', 'branches.id')
-                          ->orderBy('branches.name', $columnDirection)
-                          ->select('products.*');
+                        ->orderBy('branches.name', $columnDirection)
+                        ->select('products.*');
                 } elseif (in_array($columnName, ['serial_no', 'status'])) {
                     $query->orderBy('products.' . $columnName, $columnDirection);
                 }
@@ -62,36 +62,36 @@ class ProductController extends Controller
                 $query->orderBy('products.id', 'desc');
             }
 
-            $totalRecords = Product::inStock()->count();
+            $totalRecords    = Product::inStock()->count();
             $filteredRecords = $query->count();
 
             // Pagination
-            $start  = $request->get('start');
-            $length = $request->get('length');
+            $start    = $request->get('start');
+            $length   = $request->get('length');
             $products = $query->skip($start)->take($length)->get();
 
-            $data = $products->map(function($product, $index) use ($start) {
+            $data = $products->map(function ($product, $index) use ($start) {
                 return [
-                    'checkbox' => '<input type="checkbox" name="product_ids[]" value="' . $product->id . '" class="product-checkbox">',
+                    'checkbox'    => '<input type="checkbox" name="product_ids[]" value="' . $product->id . '" class="product-checkbox">',
                     'DT_RowIndex' => $start + $index + 1,
-                    'category' => ['name' => $product->category->name ?? 'N/A'],
-                    'branch' => ['name' => $product->branch->name ?? 'N/A'],
-                    'serial_no' => $product->serial_no,
-                    'status' => '<span class="badge bg-success">Stock In</span>',
-                    'action' => '
+                    'category'    => ['name' => $product->category->name ?? 'N/A'],
+                    'branch'      => ['name' => $product->branch->name ?? 'N/A'],
+                    'serial_no'   => $product->serial_no,
+                    'status'      => '<span class="badge bg-success">Stock In</span>',
+                    'action'      => '
                         <form action="' . route('products.stock-out', $product->id) . '" method="POST" class="d-inline-block" onsubmit="return confirm(\'Are you sure you want to mark this item as sold?\');">
                             ' . csrf_field() . '
                             <button type="submit" class="btn btn-sm btn-warning">Stock Out</button>
                         </form>
-                    '
+                    ',
                 ];
             });
 
             return response()->json([
-                'draw' => intval($request->draw),
-                'recordsTotal' => $totalRecords,
+                'draw'            => intval($request->draw),
+                'recordsTotal'    => $totalRecords,
                 'recordsFiltered' => $filteredRecords,
-                'data' => $data,
+                'data'            => $data,
             ]);
         }
 
@@ -110,8 +110,8 @@ class ProductController extends Controller
             }
 
             Product::whereIn('id', $ids)->update([
-                'status' => 'stock_out',
-                'stock_out_by' => auth()->user()->id,
+                'status'         => 'stock_out',
+                'stock_out_by'   => auth()->user()->id,
                 'stock_out_date' => today(),
             ]);
 
@@ -141,31 +141,31 @@ class ProductController extends Controller
             // Searching
             if ($request->search['value']) {
                 $searchValue = $request->search['value'];
-                $query->where(function($q) use ($searchValue) {
+                $query->where(function ($q) use ($searchValue) {
                     $q->where('serial_no', 'like', "%{$searchValue}%")
-                      ->orWhereHas('category', function($cq) use ($searchValue) {
-                          $cq->where('name', 'like', "%{$searchValue}%");
-                      })
-                      ->orWhereHas('branch', function($bq) use ($searchValue) {
-                          $bq->where('name', 'like', "%{$searchValue}%");
-                      });
+                        ->orWhereHas('category', function ($cq) use ($searchValue) {
+                            $cq->where('name', 'like', "%{$searchValue}%");
+                        })
+                        ->orWhereHas('branch', function ($bq) use ($searchValue) {
+                            $bq->where('name', 'like', "%{$searchValue}%");
+                        });
                 });
             }
 
             // Ordering
             if ($request->has('order')) {
-                $columnIndex = $request->order[0]['column'];
-                $columnName = $request->columns[$columnIndex]['data'];
+                $columnIndex     = $request->order[0]['column'];
+                $columnName      = $request->columns[$columnIndex]['data'];
                 $columnDirection = $request->order[0]['dir'];
 
                 if ($columnName === 'category.name') {
                     $query->join('categories', 'products.category_id', '=', 'categories.id')
-                          ->orderBy('categories.name', $columnDirection)
-                          ->select('products.*');
+                        ->orderBy('categories.name', $columnDirection)
+                        ->select('products.*');
                 } elseif ($columnName === 'branch.name') {
                     $query->join('branches', 'products.branch_id', '=', 'branches.id')
-                          ->orderBy('branches.name', $columnDirection)
-                          ->select('products.*');
+                        ->orderBy('branches.name', $columnDirection)
+                        ->select('products.*');
                 } elseif (in_array($columnName, ['serial_no', 'updated_at'])) {
                     $query->orderBy('products.' . $columnName, $columnDirection);
                 }
@@ -173,30 +173,30 @@ class ProductController extends Controller
                 $query->orderBy('products.updated_at', 'desc');
             }
 
-            $totalRecords = Product::stockOut()->count();
+            $totalRecords    = Product::stockOut()->count();
             $filteredRecords = $query->count();
 
             // Pagination
-            $start  = $request->get('start');
-            $length = $request->get('length');
+            $start    = $request->get('start');
+            $length   = $request->get('length');
             $products = $query->skip($start)->take($length)->get();
 
-            $data = $products->map(function($product, $index) use ($start) {
+            $data = $products->map(function ($product, $index) use ($start) {
                 return [
                     'DT_RowIndex' => $start + $index + 1,
-                    'category' => ['name' => $product->category->name ?? 'N/A'],
-                    'branch' => ['name' => $product->branch->name ?? 'N/A'],
-                    'serial_no' => $product->serial_no,
-                    'status' => '<span class="badge bg-danger">Stock Out</span>',
-                    'updated_at' => $product->updated_at->format('d/m/Y h:i A'),
+                    'category'    => ['name' => $product->category->name ?? 'N/A'],
+                    'branch'      => ['name' => $product->branch->name ?? 'N/A'],
+                    'serial_no'   => $product->serial_no,
+                    'status'      => '<span class="badge bg-danger">Stock Out</span>',
+                    'updated_at'  => $product->updated_at->format('d/m/Y h:i A'),
                 ];
             });
 
             return response()->json([
-                'draw' => intval($request->draw),
-                'recordsTotal' => $totalRecords,
+                'draw'            => intval($request->draw),
+                'recordsTotal'    => $totalRecords,
                 'recordsFiltered' => $filteredRecords,
-                'data' => $data,
+                'data'            => $data,
             ]);
         }
 
@@ -224,11 +224,11 @@ class ProductController extends Controller
             DB::beginTransaction();
 
             $commonData = [
-                'category_id' => $request->category_id,
-                'branch_id'   => $request->branch_id,
-                'stock_in_by' => auth()->user()->id,
+                'category_id'   => $request->category_id,
+                'branch_id'     => $request->branch_id,
+                'stock_in_by'   => auth()->user()->id,
                 'stock_in_date' => today(),
-                'status'      => 'stock_in',
+                'status'        => 'stock_in',
             ];
 
             if ($request->serial_type === 'single') {
@@ -277,11 +277,11 @@ class ProductController extends Controller
     {
         try {
             $product->update([
-                'status' => 'stock_out',
-                'stock_out_by' => auth()->user()->id,
+                'status'         => 'stock_out',
+                'stock_out_by'   => auth()->user()->id,
                 'stock_out_date' => today(),
             ]);
-            
+
             notify()->success('Product marked as Stock Out.', 'Success');
             return redirect()->back();
 
