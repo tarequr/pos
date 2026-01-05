@@ -263,9 +263,11 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-                                                                                    // Check for duplicate entry error specifically?
-            if (str_contains($e->getMessage(), 'Integrity constraint violation')) { // Duplicate entry
-                notify()->error('One or more serial numbers in the range already exist.', 'Error');
+            // Check for duplicate entry error specifically?
+            if (str_contains($e->getMessage(), 'Integrity constraint violation')) {
+                preg_match("/Duplicate entry '(.*?)'/", $e->getMessage(), $matches);
+                $duplicateValue = $matches[1] ?? 'one or more';
+                notify()->error("Serial number '$duplicateValue' already exists.", 'Error');
                 return back()->withInput();
             }
             notify()->error('Something went wrong: ' . $e->getMessage(), 'Error');
