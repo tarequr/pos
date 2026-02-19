@@ -253,6 +253,14 @@ class ProductController extends Controller
                         'serial_no' => $serial,
                     ]));
                 }
+            } elseif ($request->serial_type === 'custom') {
+                // Custom Bulk
+                $serials = array_filter($request->custom_serials);
+                foreach ($serials as $serial) {
+                    Product::create(array_merge($commonData, [
+                        'serial_no' => $serial,
+                    ]));
+                }
             }
 
             DB::commit();

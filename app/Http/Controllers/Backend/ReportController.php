@@ -15,8 +15,33 @@ class ReportController extends Controller
         $categories = Category::where('status', 1)->orderBy('name')->get();
         $branches = Branch::where('status', 1)->orderBy('name')->get();
 
+        $data = $this->getReportData($request);
+        $products = $data['products'];
+        $filterSummary = $data['filterSummary'];
+        $showReport = $data['showReport'];
+
+        return view('admin.pages.reports.index', compact('categories', 'branches', 'products', 'filterSummary', 'showReport'));
+    }
+
+    public function downloadPdf(Request $request)
+    {
+        $data = $this->getReportData($request);
+        $products = $data['products'];
+        $filterSummary = $data['filterSummary'];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pages.reports.pdf', [
+            'products' => $products,
+            'filterSummary' => $filterSummary
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('product-report-' . now()->format('Y-m-d-His') . '.pdf');
+    }
+
+    private function getReportData(Request $request)
+    {
         $query = Product::with(['category', 'branch']);
         $showReport = false;
+        $products = collect();
 
         $filterSummary = [
             'category' => 'All',
@@ -25,8 +50,7 @@ class ReportController extends Controller
             'date_range' => 'All'
         ];
 
-        // Check if generate flag is present (only show report if button was clicked)
-        if ($request->filled('generate')) {
+        if ($request->filled('generate') || $request->routeIs('reports.download-pdf')) {
             $showReport = true;
 
             if ($request->filled('category_id')) {
@@ -70,10 +94,12 @@ class ReportController extends Controller
             }
 
             $products = $query->latest()->get();
-        } else {
-            $products = collect();
         }
 
-        return view('admin.pages.reports.index', compact('categories', 'branches', 'products', 'filterSummary', 'showReport'));
+        return [
+            'products' => $products,
+            'filterSummary' => $filterSummary,
+            'showReport' => $showReport
+        ];
     }
 }

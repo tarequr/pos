@@ -81,6 +81,12 @@
                                         onclick="toggleSerialInput('bulk')">
                                     <label class="form-check-label" for="serial_bulk">Bulk Entry (50)</label>
                                 </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="serial_type" id="serial_custom"
+                                        value="custom" {{ old('serial_type') === 'custom' ? 'checked' : '' }}
+                                        onclick="toggleSerialInput('custom')">
+                                    <label class="form-check-label" for="serial_custom">Custom Bulk Entry</label>
+                                </div>
                             </div>
 
                             <!-- Single Serial Input -->
@@ -123,6 +129,30 @@
                                     @endfor
                                 </div>
                             </div>
+                            <!-- Custom Bulk Serial Input -->
+                            <div id="custom-bulk-input" class="mb-3"
+                                style="{{ old('serial_type') === 'custom' ? '' : 'display:none;' }}">
+                                <div class="mb-3 col-md-4">
+                                    <label for="custom_serial_count" class="form-label">Number of Serials <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="custom_serial_count"
+                                        placeholder="Enter count" min="1" max="200"
+                                        onkeyup="generateCustomFields()" onchange="generateCustomFields()">
+                                    <div id="custom-count-error" class="text-danger small mt-1" style="display: none;">Maximum 200 serials allowed.</div>
+                                </div>
+                                <div id="custom-serial-fields" class="row">
+                                    <!-- Dynamic fields will be injected here -->
+                                    @if(old('serial_type') === 'custom' && old('custom_serials'))
+                                        @foreach(old('custom_serials') as $index => $val)
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Serial Number {{ $index + 1 }}</label>
+                                                <input type="number" class="form-control" name="custom_serials[]"
+                                                    value="{{ $val }}" placeholder="Enter Serial Number" required>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
 
                             <div class="d-flex justify-content-end">
                                 <a href="{{ route('products.index') }}" class="btn btn-secondary me-2">Cancel</a>
@@ -143,6 +173,7 @@
             const singleInput = document.getElementById('single-input');
             const rangeInput = document.getElementById('range-input');
             const bulkInput = document.getElementById('bulk-input');
+            const customInput = document.getElementById('custom-bulk-input');
 
             const serialNo = document.getElementById('serial_no');
             const serialStart = document.getElementById('serial_start');
@@ -153,6 +184,7 @@
             singleInput.style.display = 'none';
             rangeInput.style.display = 'none';
             bulkInput.style.display = 'none';
+            customInput.style.display = 'none';
 
             // Remove required attribute from all inputs
             serialNo.removeAttribute('required');
@@ -182,7 +214,50 @@
                 for (let i = 0; i < bulkSerials.length; i++) {
                     bulkSerials[i].setAttribute('required', 'required');
                 }
+            } else if (type === 'custom') {
+                customInput.style.display = 'block';
+                // Trigger field generation if count exists
+                generateCustomFields();
             }
+        }
+
+        function generateCustomFields() {
+            const count = parseInt(document.getElementById('custom_serial_count').value);
+            const container = document.getElementById('custom-serial-fields');
+
+            // If we are showing old data, dont clear if count matches
+            const currentFields = container.getElementsByTagName('input').length;
+
+            const errorDiv = document.getElementById('custom-count-error');
+            
+            if (isNaN(count) || count < 1) {
+                container.innerHTML = '';
+                errorDiv.style.display = 'none';
+                return;
+            }
+
+            if (count > 200) {
+                errorDiv.style.display = 'block';
+                container.innerHTML = '';
+                return;
+            } else {
+                errorDiv.style.display = 'none';
+            }
+
+            // If count is same, do nothing to preserve values
+            if (count === currentFields) return;
+
+            let html = '';
+            for (let i = 1; i <= count; i++) {
+                html += `
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Serial Number ${i}</label>
+                        <input type="number" class="form-control" name="custom_serials[]"
+                            placeholder="Enter Serial Number" required>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
         }
     </script>
 @endsection
