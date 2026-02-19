@@ -72,6 +72,9 @@
                 <button onclick="window.print()" class="btn btn-info btn-sm">
                     <i class="align-middle" data-feather="printer"></i> Print Report
                 </button>
+                <a href="{{ route('reports.download-pdf', request()->all()) }}" class="btn btn-success btn-sm">
+                    <i class="align-middle" data-feather="download"></i> Download PDF
+                </a>
             @endif
         </div>
         <div class="col-12">

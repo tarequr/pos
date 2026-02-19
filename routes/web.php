@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('products/bulk-stock-out', [ProductController::class, 'bulkStockOut'])->name('products.bulk-stock-out');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/download-pdf', [ReportController::class, 'downloadPdf'])->name('reports.download-pdf');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
